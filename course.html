@@ -1,0 +1,1650 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Python avec Thonny – Guide Interactif</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #3b82f6;
+            --primary-dark: #2563eb;
+            --secondary: #10b981;
+            --accent: #8b5cf6;
+            --danger: #ef4444;
+            --warning: #f59e0b;
+            --light: #f8fafc;
+            --dark: #1e293b;
+            --gray: #64748b;
+            --card-bg: #ffffff;
+            --border-radius: 16px;
+            --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.1);
+            --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            --shadow-lg: 0 10px 25px -3px rgba(0, 0, 0, 0.1);
+            --shadow-xl: 0 20px 50px -12px rgba(0, 0, 0, 0.25);
+            --transition-fast: 150ms cubic-bezier(0.4, 0, 0.2, 1);
+            --transition-base: 300ms cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            line-height: 1.6;
+            color: var(--dark);
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+            transition: var(--transition-base);
+        }
+
+        body.dark-mode {
+            background: linear-gradient(135deg, #1e3a8a 0%, #581c87 100%);
+            color: #f1f5f9;
+        }
+
+        .container {
+            max-width: 1100px;
+            margin: 0 auto;
+            background: var(--card-bg);
+            border-radius: 24px;
+            box-shadow: var(--shadow-xl);
+            overflow: hidden;
+            animation: slideUp 0.6s ease-out;
+        }
+
+        body.dark-mode .container {
+            background: #0f172a;
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .header {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);
+            color: white;
+            padding: 30px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .header::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -10%;
+            width: 200px;
+            height: 200px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            animation: float 6s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0) rotate(0deg); }
+            50% { transform: translateY(-20px) rotate(180deg); }
+        }
+
+        .header-content {
+            position: relative;
+            z-index: 1;
+        }
+
+        h1 {
+            font-size: 2rem;
+            font-weight: 800;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .header-subtitle {
+            opacity: 0.9;
+            font-size: 1.1rem;
+        }
+
+        .controls {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-top: 20px;
+        }
+
+        .control-btn {
+            background: rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(10px);
+            color: white;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            padding: 10px 20px;
+            border-radius: 12px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 0.9rem;
+            transition: var(--transition-base);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .control-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .language-selector {
+            position: relative;
+        }
+
+        .language-dropdown {
+            display: none;
+            position: absolute;
+            top: 100%;
+            left: 0;
+            margin-top: 8px;
+            background: white;
+            border-radius: 12px;
+            box-shadow: var(--shadow-lg);
+            overflow: hidden;
+            z-index: 100;
+            min-width: 200px;
+            animation: dropDown 0.3s ease-out;
+        }
+
+        @keyframes dropDown {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        body.dark-mode .language-dropdown {
+            background: #1e293b;
+        }
+
+        .language-dropdown a {
+            color: var(--dark);
+            padding: 14px 18px;
+            text-decoration: none;
+            display: block;
+            transition: var(--transition-fast);
+            font-weight: 500;
+        }
+
+        body.dark-mode .language-dropdown a {
+            color: #f1f5f9;
+        }
+
+        .language-dropdown a:hover {
+            background: var(--light);
+            padding-left: 24px;
+        }
+
+        body.dark-mode .language-dropdown a:hover {
+            background: #334155;
+        }
+
+        .language-selector:hover .language-dropdown {
+            display: block;
+        }
+
+        .content {
+            padding: 40px;
+        }
+
+        .progress-section {
+            margin-bottom: 40px;
+        }
+
+        .progress-bar {
+            height: 12px;
+            background: #e2e8f0;
+            border-radius: 12px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        body.dark-mode .progress-bar {
+            background: #334155;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--primary) 0%, var(--accent) 100%);
+            width: 0%;
+            transition: width 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .progress-fill::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+            animation: shimmer 2s infinite;
+        }
+
+        @keyframes shimmer {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
+        }
+
+        .progress-info {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 12px;
+            font-weight: 600;
+            color: var(--gray);
+        }
+
+        .step-indicator {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin: 30px 0;
+            flex-wrap: wrap;
+        }
+
+        .step-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: #cbd5e1;
+            transition: var(--transition-base);
+            cursor: pointer;
+        }
+
+        body.dark-mode .step-dot {
+            background: #475569;
+        }
+
+        .step-dot.active {
+            background: var(--primary);
+            transform: scale(1.5);
+        }
+
+        .step-dot.completed {
+            background: var(--secondary);
+        }
+
+        .step-container {
+            display: none;
+            animation: fadeIn 0.5s ease-out;
+        }
+
+        .step-container.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .step-card {
+            background: var(--light);
+            border-radius: var(--border-radius);
+            padding: 30px;
+            margin-bottom: 25px;
+            border-left: 5px solid var(--primary);
+            box-shadow: var(--shadow-md);
+            transition: var(--transition-base);
+        }
+
+        body.dark-mode .step-card {
+            background: #1e293b;
+        }
+
+        .step-card:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .step-card.objectif { border-left-color: var(--accent); }
+        .step-card.conseil { border-left-color: var(--danger); }
+        .step-card.info { border-left-color: var(--secondary); }
+
+        .step-header {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .step-number {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);
+            color: white;
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 800;
+            font-size: 1.3rem;
+            box-shadow: var(--shadow-md);
+        }
+
+        .step-title {
+            font-size: 1.6rem;
+            font-weight: 700;
+            color: var(--primary);
+            margin: 0;
+        }
+
+        body.dark-mode .step-title {
+            color: #60a5fa;
+        }
+
+        .step-subtitle {
+            font-size: 1.1rem;
+            color: var(--gray);
+            margin-top: 8px;
+        }
+
+        .checklist {
+            margin: 20px 0;
+        }
+
+        .checklist-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 15px;
+            padding: 16px;
+            margin-bottom: 12px;
+            background: white;
+            border-radius: 12px;
+            border: 2px solid #e2e8f0;
+            transition: var(--transition-base);
+            cursor: pointer;
+        }
+
+        body.dark-mode .checklist-item {
+            background: #0f172a;
+            border-color: #334155;
+        }
+
+        .checklist-item:hover {
+            border-color: var(--primary);
+            transform: translateX(5px);
+        }
+
+        .checklist-item.completed {
+            background: linear-gradient(135deg, #d1fae5 0%, #a7f3d0 100%);
+            border-color: var(--secondary);
+        }
+
+        body.dark-mode .checklist-item.completed {
+            background: linear-gradient(135deg, #064e3b 0%, #065f46 100%);
+        }
+
+        .checklist-item input[type="checkbox"] {
+            width: 24px;
+            height: 24px;
+            cursor: pointer;
+            accent-color: var(--secondary);
+            flex-shrink: 0;
+        }
+
+        .checklist-item label {
+            cursor: pointer;
+            font-weight: 500;
+            flex-grow: 1;
+        }
+
+        .interactive-box {
+            background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%);
+            border: 2px dashed var(--primary);
+            border-radius: var(--border-radius);
+            padding: 25px;
+            margin: 20px 0;
+            cursor: pointer;
+            transition: var(--transition-base);
+            position: relative;
+            overflow: hidden;
+        }
+
+        body.dark-mode .interactive-box {
+            background: linear-gradient(135deg, #1e3a8a 0%, #1e40af 100%);
+        }
+
+        .interactive-box::before {
+            content: '👆';
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            font-size: 2rem;
+            animation: bounce 2s infinite;
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        .interactive-box:hover {
+            transform: scale(1.02);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .interactive-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.5s ease-out;
+        }
+
+        .interactive-content.expanded {
+            max-height: 500px;
+        }
+
+        .code-block {
+            background: #1e293b;
+            color: #e2e8f0;
+            padding: 20px;
+            border-radius: 12px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.95rem;
+            margin: 20px 0;
+            overflow-x: auto;
+            border-left: 4px solid var(--warning);
+            box-shadow: var(--shadow-md);
+            position: relative;
+        }
+
+        .code-block::before {
+            content: 'Python';
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: var(--warning);
+            color: var(--dark);
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-size: 0.7rem;
+            font-weight: 600;
+        }
+
+        .code-editor {
+            width: 100%;
+            min-height: 100px;
+            padding: 15px;
+            background: #1e293b;
+            color: #e2e8f0;
+            border: 2px solid #334155;
+            border-radius: 12px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.95rem;
+            resize: vertical;
+            transition: var(--transition-base);
+        }
+
+        .code-editor:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+        }
+
+        .btn-run {
+            background: linear-gradient(135deg, var(--secondary) 0%, #059669 100%);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 10px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition-base);
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            margin-top: 12px;
+        }
+
+        .btn-run:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .output-box {
+            background: #0f172a;
+            color: #10b981;
+            padding: 20px;
+            border-radius: 12px;
+            margin-top: 15px;
+            font-family: 'Courier New', monospace;
+            border-left: 4px solid var(--secondary);
+            display: none;
+            animation: slideIn 0.3s ease-out;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateX(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        .output-box.show {
+            display: block;
+        }
+
+        .zone-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin: 25px 0;
+        }
+
+        .zone-card {
+            background: white;
+            padding: 25px;
+            border-radius: 12px;
+            border: 2px solid #e2e8f0;
+            transition: var(--transition-base);
+            position: relative;
+            overflow: hidden;
+        }
+
+        body.dark-mode .zone-card {
+            background: #1e293b;
+            border-color: #334155;
+        }
+
+        .zone-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: linear-gradient(90deg, var(--primary), var(--accent));
+        }
+
+        .zone-card:hover {
+            transform: translateY(-8px);
+            box-shadow: var(--shadow-xl);
+            border-color: var(--primary);
+        }
+
+        .zone-icon {
+            font-size: 2.5rem;
+            margin-bottom: 15px;
+        }
+
+        .zone-title {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 10px;
+        }
+
+        body.dark-mode .zone-title {
+            color: #60a5fa;
+        }
+
+        .info-box {
+            background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+            border-left: 4px solid var(--warning);
+            padding: 20px;
+            border-radius: 12px;
+            margin: 20px 0;
+        }
+
+        body.dark-mode .info-box {
+            background: linear-gradient(135deg, #78350f 0%, #92400e 100%);
+        }
+
+        .info-box.success {
+            background: linear-gradient(135deg, #d1fae5 0%, #a7f3d0 100%);
+            border-left-color: var(--secondary);
+        }
+
+        body.dark-mode .info-box.success {
+            background: linear-gradient(135deg, #064e3b 0%, #065f46 100%);
+        }
+
+        .info-box.danger {
+            background: linear-gradient(135deg, #fee2e2 0%, #fecaca 100%);
+            border-left-color: var(--danger);
+        }
+
+        body.dark-mode .info-box.danger {
+            background: linear-gradient(135deg, #7f1d1d 0%, #991b1b 100%);
+        }
+
+        .navigation {
+            display: flex;
+            justify-content: space-between;
+            gap: 15px;
+            margin-top: 40px;
+            padding-top: 30px;
+            border-top: 2px solid #e2e8f0;
+        }
+
+        body.dark-mode .navigation {
+            border-top-color: #334155;
+        }
+
+        .nav-btn {
+            padding: 14px 28px;
+            border: none;
+            border-radius: 12px;
+            font-weight: 600;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: var(--transition-base);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex: 1;
+            justify-content: center;
+        }
+
+        .nav-btn.prev {
+            background: #e2e8f0;
+            color: var(--dark);
+        }
+
+        body.dark-mode .nav-btn.prev {
+            background: #334155;
+            color: #f1f5f9;
+        }
+
+        .nav-btn.next {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);
+            color: white;
+        }
+
+        .nav-btn:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .nav-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .completion-card {
+            background: linear-gradient(135deg, #d1fae5 0%, #a7f3d0 100%);
+            border-radius: var(--border-radius);
+            padding: 40px;
+            text-align: center;
+            margin-top: 30px;
+            display: none;
+            animation: scaleIn 0.5s ease-out;
+        }
+
+        body.dark-mode .completion-card {
+            background: linear-gradient(135deg, #064e3b 0%, #065f46 100%);
+        }
+
+        @keyframes scaleIn {
+            from {
+                opacity: 0;
+                transform: scale(0.9);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        .completion-card.show {
+            display: block;
+        }
+
+        .completion-icon {
+            font-size: 5rem;
+            margin-bottom: 20px;
+            animation: rotate 2s ease-in-out infinite;
+        }
+
+        @keyframes rotate {
+            0%, 100% { transform: rotate(0deg); }
+            25% { transform: rotate(-10deg); }
+            75% { transform: rotate(10deg); }
+        }
+
+        input[type="text"] {
+            width: 100%;
+            padding: 12px 16px;
+            border: 2px solid #e2e8f0;
+            border-radius: 10px;
+            font-size: 1rem;
+            transition: var(--transition-base);
+            margin-top: 10px;
+        }
+
+        body.dark-mode input[type="text"] {
+            background: #1e293b;
+            border-color: #334155;
+            color: #f1f5f9;
+        }
+
+        input[type="text"]:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+        }
+
+        .feedback {
+            margin-top: 12px;
+            padding: 12px;
+            border-radius: 8px;
+            font-weight: 600;
+            display: none;
+        }
+
+        .feedback.show {
+            display: block;
+        }
+
+        .feedback.success {
+            background: #d1fae5;
+            color: #065f46;
+        }
+
+        .feedback.warning {
+            background: #fef3c7;
+            color: #78350f;
+        }
+
+        @media (max-width: 768px) {
+            body {
+                padding: 10px;
+            }
+
+            .content {
+                padding: 20px;
+            }
+
+            h1 {
+                font-size: 1.5rem;
+            }
+
+            .controls {
+                justify-content: center;
+            }
+
+            .zone-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .navigation {
+                flex-direction: column;
+            }
+        }
+
+        .tooltip {
+            position: relative;
+            display: inline-block;
+        }
+
+        .tooltip .tooltiptext {
+            visibility: hidden;
+            background-color: #1e293b;
+            color: white;
+            text-align: center;
+            border-radius: 8px;
+            padding: 8px 12px;
+            position: absolute;
+            z-index: 1;
+            bottom: 125%;
+            left: 50%;
+            transform: translateX(-50%);
+            opacity: 0;
+            transition: opacity 0.3s;
+            font-size: 0.85rem;
+            white-space: nowrap;
+        }
+
+        .tooltip:hover .tooltiptext {
+            visibility: visible;
+            opacity: 1;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="header-content">
+                <h1>
+                    <i class="fas fa-graduation-cap"></i>
+                    <span class="lang" data-key="title">Python avec Thonny</span>
+                </h1>
+                <p class="header-subtitle lang" data-key="subtitle">Guide interactif pour débuter en programmation</p>
+                
+                <div class="controls">
+                    <div class="language-selector">
+                        <button class="control-btn">
+                            <i class="fas fa-language"></i>
+                            <span class="lang" data-key="language">Langue</span>
+                        </button>
+                        <div class="language-dropdown">
+                            <a href="#" data-lang="fr"><i class="fas fa-check"></i> Français</a>
+                            <a href="#" data-lang="ar"><i class="fas fa-check"></i> العربية (Arabe)</a>
+                            <a href="#" data-lang="ma"><i class="fas fa-check"></i> الدارجة (Darija)</a>
+                        </div>
+                    </div>
+                    <button class="control-btn" id="darkModeToggle">
+                        <i class="fas fa-moon"></i>
+                        <span class="lang" data-key="darkmode">Mode Sombre</span>
+                    </button>
+                    <button class="control-btn" id="resetProgress">
+                        <i class="fas fa-redo"></i>
+                        <span class="lang" data-key="reset">Recommencer</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div class="content">
+            <div class="progress-section">
+                <div class="progress-bar">
+                    <div class="progress-fill" id="progressFill"></div>
+                </div>
+                <div class="progress-info">
+                    <span id="currentStep" class="lang" data-key="step-progress">Étape 1 sur 7</span>
+                    <span id="progressPercent">0%</span>
+                </div>
+                <div class="step-indicator" id="stepIndicator"></div>
+            </div>
+
+            <!-- Étape 1: Objectifs -->
+            <div class="step-container active" id="step1">
+                <div class="step-card objectif">
+                    <div class="step-header">
+                        <div class="step-number">1</div>
+                        <div>
+                            <h2 class="step-title">🎯 <span class="lang" data-key="step1-title">Objectifs du guide</span></h2>
+                            <p class="step-subtitle lang" data-key="step1-subtitle">Ce que tu vas apprendre</p>
+                        </div>
+                    </div>
+                    
+                    <p class="lang" data-key="step1-intro">À la fin de ce guide, tu seras capable de :</p>
+                    
+                    <div class="checklist">
+                        <div class="checklist-item" onclick="toggleCheck(this, 0)">
+                            <input type="checkbox" id="check0">
+                            <label for="check0">
+                                📁 <span class="lang" data-key="check1">Créer et organiser tes dossiers de travail</span>
+                            </label>
+                        </div>
+                        <div class="checklist-item" onclick="toggleCheck(this, 1)">
+                            <input type="checkbox" id="check1">
+                            <label for="check1">
+                                🐍 <span class="lang" data-key="check2">Ouvrir et utiliser l'environnement Thonny</span>
+                            </label>
+                        </div>
+                        <div class="checklist-item" onclick="toggleCheck(this, 2)">
+                            <input type="checkbox" id="check2">
+                            <label for="check2">
+                                💾 <span class="lang" data-key="check3">Créer, enregistrer et retrouver un fichier Python</span>
+                            </label>
+                        </div>
+                        <div class="checklist-item" onclick="toggleCheck(this, 3)">
+                            <input type="checkbox" id="check3">
+                            <label for="check3">
+                                🚀 <span class="lang" data-key="check4">Exécuter ton premier programme</span>
+                            </label>
+                        </div>
+                        <div class="checklist-item" onclick="toggleCheck(this, 4)">
+                            <input type="checkbox" id="check4">
+                            <label for="check4">
+                                🔧 <span class="lang" data-key="check5">Comprendre et résoudre les problèmes courants</span>
+                            </label>
+                        </div>
+                    </div>
+                    
+                    <div class="info-box">
+                        <strong>💡 <span class="lang" data-key="funfact">Le savais-tu ?</span></strong>
+                        <p class="lang" data-key="funfact1">Python a été nommé d'après la série télévisée "Monty Python", pas après le serpent !</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Étape 2: Comprendre les dossiers -->
+            <div class="step-container" id="step2">
+                <div class="step-card">
+                    <div class="step-header">
+                        <div class="step-number">2</div>
+                        <div>
+                            <h2 class="step-title">🏠 <span class="lang" data-key="step2-title">Comprendre les dossiers</span></h2>
+                            <p class="step-subtitle lang" data-key="step2-subtitle">L'organisation de ton espace de travail</p>
+                        </div>
+                    </div>
+                    
+                    <p class="lang" data-key="step2-desc">Pour ne jamais se perdre, compare l'ordinateur à une maison :</p>
+                    
+                    <div class="info-box">
+                        <p><strong class="lang" data-key="analogy1">Disque C:/</strong> <span class="lang" data-key="analogy1-desc">= La maison entière</span></p>
+                        <p><strong class="lang" data-key="analogy2">Dossier "Documents"</strong> <span class="lang" data-key="analogy2-desc">= Ta chambre (où tu ranges tes affaires personnelles)</span></p>
+                        <p><strong class="lang" data-key="analogy3">Dossier "Python_TCS"</strong> <span class="lang" data-key="analogy3-desc">= Ton sac de cours (où tu ranges tout pour Python)</span></p>
+                        <p><strong class="lang" data-key="analogy4">Fichier "test1.py"</strong> <span class="lang" data-key="analogy4-desc">= Une feuille d'exercice précise dans ton sac</span></p>
+                    </div>
+                    
+                    <p class="lang" data-key="step2-warning">⚠️ Si tu mets ta feuille n'importe où (sur la table de la cuisine, dans la salle de bain...), tu risques de ne plus la retrouver ! C'est pareil avec tes fichiers.</p>
+                    
+                    <div class="interactive-box" onclick="toggleFolderStructure()">
+                        <p class="lang" data-key="interactive1">👆 <strong>Clique ici pour voir l'organisation des dossiers !</strong></p>
+                        <div class="interactive-content" id="folderStructure">
+                            <pre style="background: #1e293b; color: #e2e8f0; padding: 20px; border-radius: 8px; overflow-x: auto;">
+C:/
+└── Utilisateurs/
+    └── [TonNom]/
+        └── Documents/
+            └── <strong style="color: #10b981;">Python_TCS/</strong>
+                ├── test1.py
+                ├── test2.py
+                └── projets/
+                    └── premier_projet.py
+                            </pre>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Étape 3: Créer le dossier de travail -->
+            <div class="step-container" id="step3">
+                <div class="step-card">
+                    <div class="step-header">
+                        <div class="step-number">3</div>
+                        <div>
+                            <h2 class="step-title">📂 <span class="lang" data-key="step3-title">Créer le dossier de travail</span></h2>
+                            <p class="step-subtitle lang" data-key="step3-subtitle">Organise ton espace de travail</p>
+                        </div>
+                    </div>
+                    
+                    <ol style="margin-left: 20px; margin-bottom: 20px;">
+                        <li style="margin-bottom: 10px;"><span class="lang" data-key="step3-1">Ouvre l'<strong>Explorateur de fichiers</strong> (icône de dossier dans la barre des tâches).</span></li>
+                        <li style="margin-bottom: 10px;"><span class="lang" data-key="step3-2">Dans le menu de gauche, clique sur <strong>"Documents"</strong>.</span></li>
+                        <li style="margin-bottom: 10px;"><span class="lang" data-key="step3-3">Fais un clic droit dans un espace vide → <strong>"Nouveau"</strong> → <strong>"Dossier"</strong>.</span></li>
+                        <li style="margin-bottom: 10px;"><span class="lang" data-key="step3-4">Nomme-le exactement : <code style="background: #e2e8f0; padding: 2px 6px; border-radius: 4px;"><strong>Python_TCS</strong></code> (ajoute ton prénom si tu veux).</span></li>
+                        <li><span class="lang" data-key="step3-5">Appuie sur Entrée. Ton sac de cours est prêt !</span></li>
+                    </ol>
+                    
+                    <div class="interactive-box">
+                        <p class="lang" data-key="interactive2">💡 <strong>Comment nommer ton dossier ?</strong></p>
+                        <input type="text" id="folderName" placeholder="Python_TCS" class="lang" data-key="folder-placeholder">
+                        <div id="folderFeedback" class="feedback"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Étape 4: Ouvrir Thonny -->
+            <div class="step-container" id="step4">
+                <div class="step-card">
+                    <div class="step-header">
+                        <div class="step-number">4</div>
+                        <div>
+                            <h2 class="step-title">🐍 <span class="lang" data-key="step4-title">Ouvrir Thonny</span></h2>
+                            <p class="step-subtitle lang" data-key="step4-subtitle">Découvrir l'environnement de développement</p>
+                        </div>
+                    </div>
+                    
+                    <ol style="margin-left: 20px; margin-bottom: 20px;">
+                        <li style="margin-bottom: 10px;"><span class="lang" data-key="step4-1">Clique sur le menu Démarrer (Windows) et tape <strong>"Thonny"</strong>.</span></li>
+                        <li><span class="lang" data-key="step4-2">Clique sur l'application pour l'ouvrir.</span></li>
+                    </ol>
+                    
+                    <p class="lang" data-key="step4-desc">L'interface de Thonny a 3 zones principales :</p>
+                    
+                    <div class="zone-grid">
+                        <div class="zone-card">
+                            <div class="zone-icon">✏️</div>
+                            <h3 class="zone-title lang" data-key="zone1">Zone d'édition (Script)</h3>
+                            <p class="lang" data-key="zone1-desc">C'est là que tu écris ton code, comme sur une feuille.</p>
+                        </div>
+                        <div class="zone-card">
+                            <div class="zone-icon">📁</div>
+                            <h3 class="zone-title lang" data-key="zone2">Gestionnaire de fichiers</h3>
+                            <p class="lang" data-key="zone2-desc">Montre les fichiers de ton projet (ton "sac").</p>
+                        </div>
+                        <div class="zone-card">
+                            <div class="zone-icon">🐢</div>
+                            <h3 class="zone-title lang" data-key="zone3">Console (Shell)</h3>
+                            <p class="lang" data-key="zone3-desc">Affiche les résultats et les messages d'erreur.</p>
+                        </div>
+                    </div>
+                    
+                    <div class="info-box">
+                        <strong>💡 <span class="lang" data-key="funfact">Le savais-tu ?</span></strong>
+                        <p class="lang" data-key="funfact2">Thonny est spécialement conçu pour les débutants en Python ! Il est simple et aide à comprendre le code.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Étape 5: Premier programme -->
+            <div class="step-container" id="step5">
+                <div class="step-card">
+                    <div class="step-header">
+                        <div class="step-number">5</div>
+                        <div>
+                            <h2 class="step-title">💾 <span class="lang" data-key="step5-title">Premier programme</span></h2>
+                            <p class="step-subtitle lang" data-key="step5-subtitle">Écrire et exécuter ton premier code</p>
+                        </div>
+                    </div>
+                    
+                    <p class="lang" data-key="step5-desc">Dans la zone d'édition (la grande zone blanche en haut), écris exactement ceci :</p>
+                    
+                    <div class="code-block">
+print("Bonjour le monde!")
+                    </div>
+                    
+                    <p class="lang" data-key="step5-instructions">Pour l'exécuter :</p>
+                    <ol style="margin-left: 20px; margin-bottom: 20px;">
+                        <li style="margin-bottom: 10px;"><span class="lang" data-key="step5-1"><strong>Enregistre</strong> d'abord ton fichier (Ctrl+S).</span></li>
+                        <li style="margin-bottom: 10px;"><span class="lang" data-key="step5-2">Clique sur le bouton <strong>"Run"</strong> (une flèche verte) ou appuie sur <strong>F5</strong>.</span></li>
+                        <li><span class="lang" data-key="step5-3">Regarde la zone <strong>Console</strong> en bas : tu devrais voir s'afficher :</span></li>
+                    </ol>
+                    
+                    <div class="code-block">
+Bonjour le monde!
+                    </div>
+                    
+                    <div class="interactive-box">
+                        <p class="lang" data-key="interactive3">💻 <strong>Essaye toi-même !</strong> Modifie le code ci-dessous :</p>
+                        <textarea id="codeEditor" class="code-editor" placeholder="print('Bonjour le monde!')">print("Bonjour le monde!")</textarea>
+                        <button id="runCode" class="btn-run">
+                            <i class="fas fa-play"></i>
+                            <span class="lang" data-key="run-button">Exécuter le code</span>
+                        </button>
+                        <div id="output" class="output-box">
+                            <span class="lang" data-key="output-label">Résultat :</span> <span id="outputText"></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Étape 6: En cas de problème -->
+            <div class="step-container" id="step6">
+                <div class="step-card conseil">
+                    <div class="step-header">
+                        <div class="step-number">6</div>
+                        <div>
+                            <h2 class="step-title">🔧 <span class="lang" data-key="step6-title">En cas de problème</span></h2>
+                            <p class="step-subtitle lang" data-key="step6-subtitle">Comment résoudre les erreurs courantes</p>
+                        </div>
+                    </div>
+                    
+                    <p class="lang" data-key="step6-desc">Si une erreur apparaît (texte rouge dans la console) :</p>
+                    
+                    <ol style="margin-left: 20px; margin-bottom: 20px;">
+                        <li style="margin-bottom: 10px;"><span class="lang" data-key="step6-1"><strong>Ne panique pas !</strong> Les erreurs font partie de l'apprentissage.</span></li>
+                        <li style="margin-bottom: 10px;"><span class="lang" data-key="step6-2">Sélectionne le message d'erreur (en rouge) avec la souris et copie-le (Ctrl+C).</span></li>
+                        <li style="margin-bottom: 10px;"><span class="lang" data-key="step6-3">Va sur un assistant comme <strong>ChatGPT</strong> ou demande à ton professeur.</span></li>
+                        <li><span class="lang" data-key="step6-4">Colle l'erreur et demande : "Que signifie cette erreur Python ?".</span></li>
+                    </ol>
+                    
+                    <p class="lang" data-key="step6-common">Les erreurs les plus courantes au début :</p>
+                    <ul style="margin-left: 20px; margin-bottom: 20px;">
+                        <li style="margin-bottom: 8px;"><strong>SyntaxError</strong>: <span class="lang" data-key="error1">Faute de frappe, guillemet oublié, parenthèse manquante.</span></li>
+                        <li style="margin-bottom: 8px;"><strong>NameError</strong>: <span class="lang" data-key="error2">Mot mal écrit (ex: <code>prin("bonjour")</code> au lieu de <code>print</code>).</span></li>
+                        <li><span class="lang" data-key="error3">Fichier non enregistré ou enregistré au mauvais endroit.</span></li>
+                    </ul>
+                    
+                    <div class="interactive-box">
+                        <p class="lang" data-key="interactive4">🔍 <strong>Simulateur d'erreurs</strong> - Essaie de trouver l'erreur dans ce code :</p>
+                        <div class="code-block" style="border-left-color: var(--danger);">
+prin("Hello World")
+                        </div>
+                        <button id="findError" class="btn-run" style="background: linear-gradient(135deg, var(--warning) 0%, #d97706 100%);">
+                            <i class="fas fa-search"></i>
+                            <span class="lang" data-key="find-button">Trouver l'erreur</span>
+                        </button>
+                        <div id="errorHint" class="feedback"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Étape 7: Règles importantes -->
+            <div class="step-container" id="step7">
+                <div class="step-card">
+                    <div class="step-header">
+                        <div class="step-number">7</div>
+                        <div>
+                            <h2 class="step-title">📜 <span class="lang" data-key="step7-title">Règles importantes</span></h2>
+                            <p class="step-subtitle lang" data-key="step7-subtitle">Les bonnes pratiques à retenir</p>
+                        </div>
+                    </div>
+                    
+                    <div class="checklist">
+                        <div class="checklist-item" onclick="toggleCheck(this, 5)">
+                            <input type="checkbox" id="check5">
+                            <label for="check5">
+                                💾 <span class="lang" data-key="rule1"><strong>Toujours enregistrer avant d'exécuter.</strong> Sinon, tu exécutes une ancienne version de ton code.</span>
+                            </label>
+                        </div>
+                        <div class="checklist-item" onclick="toggleCheck(this, 6)">
+                            <input type="checkbox" id="check6">
+                            <label for="check6">
+                                📁 <span class="lang" data-key="rule2"><strong>Toujours travailler dans le bon dossier.</strong> Vérifie que tu es bien dans <code>Python_TCS</code> quand tu enregistres.</span>
+                            </label>
+                        </div>
+                        <div class="checklist-item" onclick="toggleCheck(this, 7)">
+                            <input type="checkbox" id="check7">
+                            <label for="check7">
+                                😌 <span class="lang" data-key="rule3"><strong>Ne jamais paniquer devant une erreur.</strong> Lis le message, copie-le, cherche la solution. C'est comme résoudre une énigme !</span>
+                            </label>
+                        </div>
+                        <div class="checklist-item" onclick="toggleCheck(this, 8)">
+                            <input type="checkbox" id="check8">
+                            <label for="check8">
+                                ✨ <span class="lang" data-key="rule4"><strong>Nomme bien tes fichiers.</strong> Utilise des noms clairs, sans espaces (utilise _ à la place). Ex: <code>calcul_moyenne.py</code>.</span>
+                            </label>
+                        </div>
+                    </div>
+                    
+                    <div class="completion-card" id="completionCard">
+                        <div class="completion-icon">🎉</div>
+                        <h2 class="lang" data-key="congrats">Félicitations !</h2>
+                        <p class="lang" data-key="completion-text">Tu as terminé le guide ! Tu es maintenant prêt à créer tes propres programmes Python avec Thonny.</p>
+                        <p class="lang" data-key="next-steps"><strong>Prochaines étapes :</strong> Essaie de modifier le programme pour qu'il affiche ton nom, puis explore d'autres commandes Python !</p>
+                        <button id="celebrateBtn" class="btn-run" style="background: linear-gradient(135deg, var(--accent) 0%, #7c3aed 100%); margin-top: 20px;">
+                            <i class="fas fa-party-horn"></i>
+                            <span class="lang" data-key="celebrate-button">Célébrer !</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="navigation">
+                <button class="nav-btn prev" id="prevBtn" disabled>
+                    <i class="fas fa-arrow-left"></i>
+                    <span class="lang" data-key="prev-button">Précédent</span>
+                </button>
+                <button class="nav-btn next" id="nextBtn">
+                    <i class="fas fa-arrow-right"></i>
+                    <span class="lang" data-key="next-button">Suivant</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Application state
+        let currentStep = 1;
+        const totalSteps = 7;
+        let completedChecks = 0;
+        const totalChecks = 9;
+        let currentLanguage = 'fr';
+        
+        // Translations object
+        const translations = {
+            fr: {
+                // Header
+                "title": "Python avec Thonny",
+                "subtitle": "Guide interactif pour débuter en programmation",
+                "language": "Langue",
+                "darkmode": "Mode Sombre",
+                "reset": "Recommencer",
+                "step-progress": "Étape 1 sur 7",
+                
+                // Step 1
+                "step1-title": "Objectifs du guide",
+                "step1-subtitle": "Ce que tu vas apprendre",
+                "step1-intro": "À la fin de ce guide, tu seras capable de :",
+                "check1": "Créer et organiser tes dossiers de travail",
+                "check2": "Ouvrir et utiliser l'environnement Thonny",
+                "check3": "Créer, enregistrer et retrouver un fichier Python",
+                "check4": "Exécuter ton premier programme",
+                "check5": "Comprendre et résoudre les problèmes courants",
+                "funfact": "Le savais-tu ?",
+                "funfact1": "Python a été nommé d'après la série télévisée 'Monty Python', pas après le serpent !",
+                
+                // Step 2
+                "step2-title": "Comprendre les dossiers",
+                "step2-subtitle": "L'organisation de ton espace de travail",
+                "step2-desc": "Pour ne jamais se perdre, compare l'ordinateur à une maison :",
+                "analogy1": "Disque C:/",
+                "analogy1-desc": "= La maison entière",
+                "analogy2": "Dossier 'Documents'",
+                "analogy2-desc": "= Ta chambre (où tu ranges tes affaires personnelles)",
+                "analogy3": "Dossier 'Python_TCS'",
+                "analogy3-desc": "= Ton sac de cours (où tu ranges tout pour Python)",
+                "analogy4": "Fichier 'test1.py'",
+                "analogy4-desc": "= Une feuille d'exercice précise dans ton sac",
+                "step2-warning": "⚠️ Si tu mets ta feuille n'importe où (sur la table de la cuisine, dans la salle de bain...), tu risques de ne plus la retrouver ! C'est pareil avec tes fichiers.",
+                "interactive1": "👆 Clique ici pour voir l'organisation des dossiers !",
+                
+                // Step 3
+                "step3-title": "Créer le dossier de travail",
+                "step3-subtitle": "Organise ton espace de travail",
+                "step3-1": "Ouvre l'<strong>Explorateur de fichiers</strong> (icône de dossier dans la barre des tâches).",
+                "step3-2": "Dans le menu de gauche, clique sur <strong>'Documents'</strong>.",
+                "step3-3": "Fais un clic droit dans un espace vide → <strong>'Nouveau'</strong> → <strong>'Dossier'</strong>.",
+                "step3-4": "Nomme-le exactement : <code><strong>Python_TCS</strong></code> (ajoute ton prénom si tu veux).",
+                "step3-5": "Appuie sur Entrée. Ton sac de cours est prêt !",
+                "interactive2": "💡 Comment nommer ton dossier ?",
+                "folder-placeholder": "Python_TCS",
+                
+                // Step 4
+                "step4-title": "Ouvrir Thonny",
+                "step4-subtitle": "Découvrir l'environnement de développement",
+                "step4-1": "Clique sur le menu Démarrer (Windows) et tape <strong>'Thonny'</strong>.",
+                "step4-2": "Clique sur l'application pour l'ouvrir.",
+                "step4-desc": "L'interface de Thonny a 3 zones principales :",
+                "zone1": "Zone d'édition (Script)",
+                "zone1-desc": "C'est là que tu écris ton code, comme sur une feuille.",
+                "zone2": "Gestionnaire de fichiers",
+                "zone2-desc": "Montre les fichiers de ton projet (ton 'sac').",
+                "zone3": "Console (Shell)",
+                "zone3-desc": "Affiche les résultats et les messages d'erreur.",
+                "funfact2": "Thonny est spécialement conçu pour les débutants en Python ! Il est simple et aide à comprendre le code.",
+                
+                // Step 5
+                "step5-title": "Premier programme",
+                "step5-subtitle": "Écrire et exécuter ton premier code",
+                "step5-desc": "Dans la zone d'édition (la grande zone blanche en haut), écris exactement ceci :",
+                "step5-instructions": "Pour l'exécuter :",
+                "step5-1": "<strong>Enregistre</strong> d'abord ton fichier (Ctrl+S).",
+                "step5-2": "Clique sur le bouton <strong>'Run'</strong> (une flèche verte) ou appuie sur <strong>F5</strong>.",
+                "step5-3": "Regarde la zone <strong>Console</strong> en bas : tu devrais voir s'afficher :",
+                "interactive3": "💻 Essaie toi-même ! Modifie le code ci-dessous :",
+                "run-button": "Exécuter le code",
+                "output-label": "Résultat :",
+                
+                // Step 6
+                "step6-title": "En cas de problème",
+                "step6-subtitle": "Comment résoudre les erreurs courantes",
+                "step6-desc": "Si une erreur apparaît (texte rouge dans la console) :",
+                "step6-1": "<strong>Ne panique pas !</strong> Les erreurs font partie de l'apprentissage.",
+                "step6-2": "Sélectionne le message d'erreur (en rouge) avec la souris et copie-le (Ctrl+C).",
+                "step6-3": "Va sur un assistant comme <strong>ChatGPT</strong> ou demande à ton professeur.",
+                "step6-4": "Colle l'erreur et demande : 'Que signifie cette erreur Python ?'.",
+                "step6-common": "Les erreurs les plus courantes au début :",
+                "error1": "Faute de frappe, guillemet oublié, parenthèse manquante.",
+                "error2": "Mot mal écrit (ex: <code>prin('bonjour')</code> au lieu de <code>print</code>).",
+                "error3": "Fichier non enregistré ou enregistré au mauvais endroit.",
+                "interactive4": "🔍 Simulateur d'erreurs - Essaie de trouver l'erreur dans ce code :",
+                "find-button": "Trouver l'erreur",
+                
+                // Step 7
+                "step7-title": "Règles importantes",
+                "step7-subtitle": "Les bonnes pratiques à retenir",
+                "rule1": "<strong>Toujours enregistrer avant d'exécuter.</strong> Sinon, tu exécutes une ancienne version de ton code.",
+                "rule2": "<strong>Toujours travailler dans le bon dossier.</strong> Vérifie que tu es bien dans <code>Python_TCS</code> quand tu enregistres.",
+                "rule3": "<strong>Ne jamais paniquer devant une erreur.</strong> Lis le message, copie-le, cherche la solution. C'est comme résoudre une énigme !",
+                "rule4": "<strong>Nomme bien tes fichiers.</strong> Utilise des noms clairs, sans espaces (utilise _ à la place). Ex: <code>calcul_moyenne.py</code>.",
+                "congrats": "Félicitations !",
+                "completion-text": "Tu as terminé le guide ! Tu es maintenant prêt à créer tes propres programmes Python avec Thonny.",
+                "next-steps": "<strong>Prochaines étapes :</strong> Essaie de modifier le programme pour qu'il affiche ton nom, puis explore d'autres commandes Python !",
+                "celebrate-button": "Célébrer !",
+                
+                // Navigation
+                "prev-button": "Précédent",
+                "next-button": "Suivant"
+            },
+            ar: {
+                "title": "بايثون مع ثوني",
+                "subtitle": "دليل تفاعلي للبدء في البرمجة",
+                "step-progress": "الخطوة 1 من 7"
+                // ... (other Arabic translations would go here)
+            },
+            ma: {
+                "title": "Python m3a Thonny",
+                "subtitle": "Guide interactif bach tbdaw f programmation",
+                "step-progress": "Étape 1 f 7"
+                // ... (other Darija translations would go here)
+            }
+        };
+
+        // DOM Elements
+        const stepContainers = document.querySelectorAll('.step-container');
+        const prevBtn = document.getElementById('prevBtn');
+        const nextBtn = document.getElementById('nextBtn');
+        const progressFill = document.getElementById('progressFill');
+        const currentStepEl = document.getElementById('currentStep');
+        const progressPercent = document.getElementById('progressPercent');
+        const stepIndicator = document.getElementById('stepIndicator');
+        const darkModeToggle = document.getElementById('darkModeToggle');
+        const resetProgressBtn = document.getElementById('resetProgress');
+        const completionCard = document.getElementById('completionCard');
+        const celebrateBtn = document.getElementById('celebrateBtn');
+        const folderNameInput = document.getElementById('folderName');
+        const folderFeedback = document.getElementById('folderFeedback');
+        const codeEditor = document.getElementById('codeEditor');
+        const runCodeBtn = document.getElementById('runCode');
+        const outputBox = document.getElementById('output');
+        const outputText = document.getElementById('outputText');
+        const findErrorBtn = document.getElementById('findError');
+        const errorHint = document.getElementById('errorHint');
+
+        // Initialize the application
+        function init() {
+            createStepIndicators();
+            updateProgress();
+            updateNavigation();
+            
+            // Load saved state
+            loadSavedState();
+            
+            // Set up event listeners
+            setupEventListeners();
+        }
+
+        function createStepIndicators() {
+            for (let i = 1; i <= totalSteps; i++) {
+                const dot = document.createElement('div');
+                dot.className = 'step-dot';
+                if (i === 1) dot.classList.add('active');
+                dot.dataset.step = i;
+                dot.addEventListener('click', () => showStep(i));
+                stepIndicator.appendChild(dot);
+            }
+        }
+
+        function showStep(stepNumber) {
+            // Hide all steps
+            stepContainers.forEach(container => {
+                container.classList.remove('active');
+            });
+            
+            // Show selected step
+            document.getElementById(`step${stepNumber}`).classList.add('active');
+            currentStep = stepNumber;
+            
+            // Update step indicators
+            document.querySelectorAll('.step-dot').forEach((dot, index) => {
+                dot.classList.remove('active');
+                if (index + 1 === stepNumber) {
+                    dot.classList.add('active');
+                }
+                if (index + 1 < stepNumber) {
+                    dot.classList.add('completed');
+                }
+            });
+            
+            updateProgress();
+            updateNavigation();
+            
+            // Show completion card if on last step and all checks completed
+            if (stepNumber === totalSteps && completedChecks === totalChecks) {
+                completionCard.classList.add('show');
+            } else {
+                completionCard.classList.remove('show');
+            }
+            
+            // Save to localStorage
+            localStorage.setItem('pythonGuideStep', stepNumber);
+        }
+
+        function updateProgress() {
+            const progress = ((currentStep - 1) / (totalSteps - 1)) * 100;
+            progressFill.style.width = `${progress}%`;
+            currentStepEl.textContent = `${currentLanguage === 'fr' ? 'Étape' : 'Step'} ${currentStep} ${currentLanguage === 'fr' ? 'sur' : 'of'} ${totalSteps}`;
+            progressPercent.textContent = `${Math.round(progress)}%`;
+        }
+
+        function updateNavigation() {
+            prevBtn.disabled = currentStep === 1;
+            
+            if (currentStep === totalSteps) {
+                nextBtn.innerHTML = `<i class="fas fa-flag-checkered"></i> ${currentLanguage === 'fr' ? 'Terminé' : 'Finish'}`;
+                nextBtn.onclick = completeGuide;
+            } else {
+                nextBtn.innerHTML = `<i class="fas fa-arrow-right"></i> ${currentLanguage === 'fr' ? 'Suivant' : 'Next'}`;
+                nextBtn.onclick = nextStep;
+            }
+        }
+
+        function nextStep() {
+            if (currentStep < totalSteps) {
+                showStep(currentStep + 1);
+            }
+        }
+
+        function prevStep() {
+            if (currentStep > 1) {
+                showStep(currentStep - 1);
+            }
+        }
+
+        function toggleCheck(element, checkIndex) {
+            const checkbox = element.querySelector('input[type="checkbox"]');
+            checkbox.checked = !checkbox.checked;
+            
+            if (checkbox.checked) {
+                element.classList.add('completed');
+                completedChecks++;
+            } else {
+                element.classList.remove('completed');
+                completedChecks--;
+            }
+            
+            // Save to localStorage
+            localStorage.setItem('pythonGuideChecks', completedChecks);
+            
+            // Show completion card if all checks completed on last step
+            if (currentStep === totalSteps && completedChecks === totalChecks) {
+                completionCard.classList.add('show');
+            }
+        }
+
+        function toggleFolderStructure() {
+            const folderStructure = document.getElementById('folderStructure');
+            folderStructure.classList.toggle('expanded');
+        }
+
+        function setupEventListeners() {
+            // Navigation
+            prevBtn.addEventListener('click', prevStep);
+            
+            // Dark mode toggle
+            darkModeToggle.addEventListener('click', () => {
+                document.body.classList.toggle('dark-mode');
+                const isDarkMode = document.body.classList.contains('dark-mode');
+                darkModeToggle.innerHTML = isDarkMode 
+                    ? '<i class="fas fa-sun"></i> Mode Clair'
+                    : '<i class="fas fa-moon"></i> Mode Sombre';
+                localStorage.setItem('pythonGuideDarkMode', isDarkMode);
+            });
+            
+            // Reset progress
+            resetProgressBtn.addEventListener('click', () => {
+                if (confirm(currentLanguage === 'fr' ? 'Es-tu sûr de vouloir tout recommencer ?' : 'Are you sure you want to restart?')) {
+                    localStorage.clear();
+                    currentStep = 1;
+                    completedChecks = 0;
+                    showStep(1);
+                    document.querySelectorAll('.checklist-item').forEach(item => {
+                        item.classList.remove('completed');
+                        item.querySelector('input[type="checkbox"]').checked = false;
+                    });
+                    completionCard.classList.remove('show');
+                }
+            });
+            
+            // Folder name input
+            folderNameInput?.addEventListener('input', (e) => {
+                const name = e.target.value.trim();
+                if (name === 'Python_TCS') {
+                    folderFeedback.textContent = currentLanguage === 'fr' ? '✅ Parfait ! C\'est le bon nom.' : '✅ Perfect! That\'s the right name.';
+                    folderFeedback.className = 'feedback show success';
+                } else if (name.length > 0) {
+                    folderFeedback.textContent = currentLanguage === 'fr' ? '⚠️ Essaye "Python_TCS" pour rester organisé(e)' : '⚠️ Try "Python_TCS" to stay organized';
+                    folderFeedback.className = 'feedback show warning';
+                } else {
+                    folderFeedback.className = 'feedback';
+                }
+            });
+            
+            // Run code button
+            runCodeBtn?.addEventListener('click', () => {
+                const code = codeEditor.value;
+                try {
+                    // Simple code execution simulation
+                    if (code.includes('print')) {
+                        const match = code.match(/print\(["'](.+)["']\)/);
+                        outputText.textContent = match ? match[1] : currentLanguage === 'fr' ? 'Erreur dans la syntaxe' : 'Syntax error';
+                    } else {
+                        outputText.textContent = currentLanguage === 'fr' ? 'Ajoute une commande print()' : 'Add a print() command';
+                    }
+                    outputBox.classList.add('show');
+                } catch (error) {
+                    outputText.textContent = currentLanguage === 'fr' ? 'Erreur d\'exécution' : 'Execution error';
+                    outputBox.classList.add('show');
+                }
+            });
+            
+            // Find error button
+            findErrorBtn?.addEventListener('click', () => {
+                errorHint.textContent = currentLanguage === 'fr' 
+                    ? 'Indice: La fonction "print" est mal écrite (il manque un "t")'
+                    : 'Hint: The "print" function is misspelled (missing "t")';
+                errorHint.className = 'feedback show warning';
+            });
+            
+            // Celebrate button
+            celebrateBtn?.addEventListener('click', createConfetti);
+            
+            // Language selector
+            document.querySelectorAll('.language-dropdown a').forEach(link => {
+                link.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    const lang = link.dataset.lang;
+                    changeLanguage(lang);
+                });
+            });
+        }
+
+        function loadSavedState() {
+            const savedStep = localStorage.getItem('pythonGuideStep');
+            const savedChecks = localStorage.getItem('pythonGuideChecks');
+            const savedDarkMode = localStorage.getItem('pythonGuideDarkMode');
+            const savedLanguage = localStorage.getItem('pythonGuideLanguage');
+            
+            if (savedStep) {
+                currentStep = parseInt(savedStep);
+                showStep(currentStep);
+            }
+            
+            if (savedChecks) {
+                completedChecks = parseInt(savedChecks);
+                // Update checkboxes based on saved state
+                document.querySelectorAll('.checklist-item').forEach((item, index) => {
+                    if (index < completedChecks) {
+                        item.classList.add('completed');
+                        item.querySelector('input[type="checkbox"]').checked = true;
+                    }
+                });
+            }
+            
+            if (savedDarkMode === 'true') {
+                document.body.classList.add('dark-mode');
+                darkModeToggle.innerHTML = '<i class="fas fa-sun"></i> Mode Clair';
+            }
+            
+            if (savedLanguage && translations[savedLanguage]) {
+                currentLanguage = savedLanguage;
+                changeLanguage(currentLanguage);
+            }
+        }
+
+        function changeLanguage(lang) {
+            if (!translations[lang]) return;
+            
+            currentLanguage = lang;
+            localStorage.setItem('pythonGuideLanguage', lang);
+            
+            // Update all elements with data-key attribute
+            document.querySelectorAll('[data-key]').forEach(element => {
+                const key = element.getAttribute('data-key');
+                if (translations[lang][key]) {
+                    if (element.tagName === 'INPUT' && element.type === 'text') {
+                        element.placeholder = translations[lang][key];
+                    } else {
+                        element.innerHTML = translations[lang][key];
+                    }
+                }
+            });
+            
+            // Update navigation
+            updateNavigation();
+            updateProgress();
+        }
+
+        function completeGuide() {
+            if (completedChecks === totalChecks) {
+                createConfetti();
+            } else {
+                alert(currentLanguage === 'fr' 
+                    ? 'Complète toutes les cases à cocher pour terminer le guide !' 
+                    : 'Complete all checkboxes to finish the guide!');
+            }
+        }
+
+        function createConfetti() {
+            const colors = ['#3b82f6', '#10b981', '#8b5cf6', '#f59e0b', '#ef4444'];
+            
+            for (let i = 0; i < 150; i++) {
+                const confetti = document.createElement('div');
+                confetti.style.position = 'fixed';
+                confetti.style.width = '10px';
+                confetti.style.height = '10px';
+                confetti.style.background = colors[Math.floor(Math.random() * colors.length)];
+                confetti.style.borderRadius = '50%';
+                confetti.style.left = Math.random() * 100 + 'vw';
+                confetti.style.top = '-10px';
+                confetti.style.zIndex = '9999';
+                confetti.style.pointerEvents = 'none';
+                
+                document.body.appendChild(confetti);
+                
+                // Animation
+                const animation = confetti.animate([
+                    { transform: `translate(0, 0) rotate(0deg)`, opacity: 1 },
+                    { transform: `translate(${Math.random() * 200 - 100}px, ${window.innerHeight}px) rotate(${Math.random() * 360}deg)`, opacity: 0 }
+                ], {
+                    duration: Math.random() * 3000 + 2000,
+                    easing: 'cubic-bezier(0.215, 0.61, 0.355, 1)'
+                });
+                
+                animation.onfinish = () => confetti.remove();
+            }
+            
+            // Celebration message
+            setTimeout(() => {
+                alert(currentLanguage === 'fr' 
+                    ? '🎉 Félicitations ! Tu maîtrises maintenant les bases de Python avec Thonny !' 
+                    : '🎉 Congratulations! You now master the basics of Python with Thonny!');
+            }, 1000);
+        }
+
+        // Initialize the app when DOM is loaded
+        document.addEventListener('DOMContentLoaded', init);
+    </script>
+</body>
+</html>
